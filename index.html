@@ -343,14 +343,40 @@
     @media (max-width: 768px) {
       .main-layout { display: none !important; }
       .mobile-layout { display: block !important; }
-      .tally-bar { position: sticky; top: 0; z-index: 100; background: white; border-radius: 0; border-left: none; border-right: none; padding: 0.5rem 0.75rem; }
-      .mobile-instruction-box { background: #f0f9f4; border: 1.5px solid #00843D; border-radius: 8px; padding: 0.75rem 1rem; margin: 0.5rem 0.75rem; font-size: 0.9rem; color: #00843D; font-weight: 600; text-align: center; }
-      .mobile-boards { display: flex; overflow-x: auto; gap: 0.75rem; padding: 0.75rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+      .tally-bar { position: sticky; top: 0; z-index: 999; background: white; border-radius: 0; border-left: none; border-right: none; border-bottom: 1px solid #eee; padding: 0.5rem 0.75rem; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+      .mobile-instruction-box { position: sticky; top: 56px; z-index: 998; background: #f0f9f4; border: none; border-bottom: 1.5px solid #00843D; border-radius: 0; padding: 0.6rem 0.75rem; margin: 0; font-size: 0.85rem; color: #00843D; font-weight: 600; text-align: center; }
+      .mobile-boards { display: flex; overflow-x: auto; overflow-y: hidden; gap: 0.75rem; padding: 0.75rem; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
       .mobile-boards::-webkit-scrollbar { display: none; }
-      .mobile-board { flex: 0 0 85vw; scroll-snap-align: start; background: white; border-radius: 10px; border: 1px solid #e5e5e5; overflow: hidden; max-height: 380px; overflow-y: auto; }
+      .mobile-board { flex: 0 0 45vw;
+      }
+      .mobile-board-wide { flex: 0 0 70vw !important; scroll-snap-align: start; background: white; border-radius: 10px; border: 1px solid #e5e5e5; overflow-x: hidden; overflow-y: auto; height: 320px; flex-shrink: 0; }
+      .mobile-board .board-header { position: sticky; top: 0; z-index: 5; }
       .swipe-hint { text-align: center; font-size: 0.75rem; color: #aaa; padding: 0.2rem 0 0.5rem; }
       .mobile-lyrics-header { position: sticky; top: 56px; z-index: 99; background: #fffbea; border: 1.5px solid #00843D; border-radius: 8px; padding: 0.75rem 1rem; margin: 0 0.75rem 0.5rem; font-size: 0.9rem; font-weight: 700; color: #00843D; text-align: center; }
-      .mobile-lyrics { padding: 0 0.75rem 3rem; font-size: 1rem; line-height: 2; }
+      .mobile-lyrics { padding: 0 0.75rem 3rem 1.5rem; font-size: 1rem; line-height: 2; }
+      .mobile-lyrics-container {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        height: 45vh;
+        background: white;
+        border-top: 2px solid #00843D;
+        display: flex;
+        flex-direction: column;
+        z-index: 998;
+      }
+      .mobile-lyrics-container .mobile-lyrics-header {
+        flex-shrink: 0;
+        position: static;
+        top: auto;
+      }
+      .mobile-lyrics-container .mobile-lyrics {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0.75rem 0.75rem 3rem 4rem !important;
+      }
+      /* Add bottom padding to main scroll so lyrics container doesn't cover content */
+      .mobile-layout { padding-bottom: 45vh; }
       .mobile-board .board-header.commonwealth { background: #FFD700 !important; color: #2c2c2c !important; }
       .mobile-board .board-header.summer { background: #00843D !important; color: white !important; }
       .mobile-board .board-header.winter { background: #FFD700 !important; color: #2c2c2c !important; }
@@ -378,7 +404,7 @@
       <div class="tally-count" style="color:#a07040;"><span id="bronzeCount">0</span> <span style="font-size:0.9rem;color:#cd7f32">🥉</span></div>
     </div>
     <div id="medalRow" style="display:flex;flex-wrap:wrap;gap:3px;flex:1;min-height:36px;align-items:flex-start;padding:4px 0;">
-      <span style="font-size:0.8rem;color:#bbb;align-self:center">Find a team or sport to earn your first medal!</span>
+      <span style="font-size:1rem;color:#0066cc;font-weight:700;text-align:center;line-height:1.4;max-width:200px;display:inline-block">Match a team or sport to the words that represent them in the lyrics!</span>
     </div>
   </div>
 
@@ -532,7 +558,8 @@
           <button class="sport-item" data-team="sw-rowing" onclick="selectSport(this,'sw-rowing')">Rowing</button>
           <button class="sport-item" data-team="sw-climbing" onclick="selectSport(this,'sw-climbing')">Sport Climbing</button>
           <button class="sport-item" data-team="sw-equestrian" onclick="selectSport(this,'sw-equestrian')">Equestrian</button>
-          <button class="sport-item" data-team="sw-volleyball" onclick="selectSport(this,'sw-volleyball')">Volleyball / Beach Volleyball</button>
+          <button class="sport-item" data-team="sw-volleyball" onclick="selectSport(this,'sw-volleyball')">Volleyball</button>
+          <button class="sport-item" data-team="sw-beachvolley" onclick="selectSport(this,'sw-beachvolley')">Beach Volleyball</button>
           <button class="sport-item" data-team="sw-badminton" onclick="selectSport(this,'sw-badminton')">Badminton</button>
           <button class="sport-item" data-team="sw-tabletennis" onclick="selectSport(this,'sw-tabletennis')">Table Tennis</button>
           <button class="sport-item" data-team="sw-taekwondo" onclick="selectSport(this,'sw-taekwondo')">Taekwondo</button>
@@ -597,7 +624,7 @@
   <div class="mobile-layout">
     <div class="mobile-instruction-box">Pick a team or sport then find it in the lyrics to win your first Gold Medal! 🥇</div>
     <div class="mobile-boards">
-      <div class="mobile-board">
+      <div class="mobile-board mobile-board-wide">
         <div class="board-header national">🦘 National Teams</div>
         <div class="board-items" id="mobileTeams"></div>
       </div>
@@ -620,6 +647,9 @@
       </div>
     </div>
     <div class="swipe-hint">← swipe for more sports →</div>
+  </div>
+  <!-- BOTTOM LYRICS CONTAINER -->
+  <div class="mobile-lyrics-container">
     <div class="mobile-lyrics-header" id="mobileLyricsHeader">Full Song Lyrics</div>
     <div class="mobile-lyrics" id="mobileLyrics"></div>
   </div>
@@ -713,6 +743,7 @@
     'sw-tennis':        ['strike'],
     'sw-triathlon':     ['swim','run','ride'],
     'sw-volleyball':    ['strike'],
+    'sw-beachvolley':   ['strike'],
     'sw-waterpolo':     ['swim','throw'],
     'sw-weightlifting': ['strength'],
     'sw-wrestling':     ['strength'],
@@ -903,6 +934,17 @@
 
   function setupMobile() {
     if (!isMobile()) return;
+    // Create sticky header wrapper and move tally + instruction into it
+    var mobileLayout = document.querySelector('.mobile-layout');
+    var tally = document.querySelector('.tally-bar');
+    var instruction = document.querySelector('.mobile-instruction-box');
+    if (mobileLayout && tally && instruction) {
+      var stickyHdr = document.createElement('div');
+      stickyHdr.style.cssText = 'position:sticky;top:0;z-index:999;background:white;';
+      mobileLayout.insertBefore(stickyHdr, mobileLayout.firstChild);
+      stickyHdr.appendChild(tally);
+      stickyHdr.appendChild(instruction);
+    }
     // Clone national teams
     var src = document.getElementById('boardNational');
     var tgt = document.getElementById('mobileTeams');

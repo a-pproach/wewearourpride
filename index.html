@@ -819,7 +819,7 @@
       phraseEl.classList.add('wrong');
       setTimeout(() => phraseEl.classList.remove('wrong'), 600);
       showToast('❌ Not quite — try a different line in the lyrics!', false);
-      updateMobileHeader('Not quite — try a different line in the lyrics!');
+      updateMobileHeader('NOTQUITE: — try a different line in the lyrics!');
     }
   }
 
@@ -927,7 +927,14 @@
 
   function updateMobileHeader(msg) {
     var h = document.getElementById('mobileLyricsHeader');
-    if (h) h.textContent = msg || 'Full Song Lyrics';
+    if (!h) return;
+    if (!msg) { h.innerHTML = 'Full Song Lyrics'; return; }
+    if (msg.startsWith('NOTQUITE:')) {
+      var rest = msg.replace('NOTQUITE:', '');
+      h.innerHTML = '<span style="color:#cc0000;font-weight:800">Not quite</span>' + rest;
+    } else {
+      h.innerHTML = msg;
+    }
   }
 
   window.addEventListener('DOMContentLoaded', setupMobile);

@@ -20,11 +20,11 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background-image: url('australia_map.png');
-      background-size: 70%;
+      background-image: url('./Map of Oz.png');
+      background-size: 75%;
       background-position: center center;
       background-repeat: no-repeat;
-      opacity: 0.12;
+      opacity: 0.15;
       pointer-events: none;
       z-index: 0;
     }
@@ -155,6 +155,11 @@
     .board-header.summer { background: #FFD700; color: #2c2c2c; }
     .board-header.winter { background: #FFD700; color: #2c2c2c; }
     .board-header.commonwealth { background: #00843D; color: white; }
+    @media (max-width: 768px) {
+      .mobile-board .board-header.commonwealth { background: #FFD700; color: #2c2c2c; }
+      .mobile-board .board-header.summer { background: #00843D; color: white; }
+      .mobile-board .board-header.winter { background: #FFD700; color: #2c2c2c; }
+    }
 
     .board-items {
       padding: 0.5rem;
@@ -572,6 +577,60 @@
   </div>
 </div>
 
+  <!-- MOBILE LAYOUT (hidden on desktop) -->
+  <div class="mobile-layout">
+
+    <!-- Instruction box -->
+    <div class="mobile-instruction-box">
+      Pick a team or sport then find it in the lyrics to win your first Gold Medal! 🥇
+    </div>
+
+    <!-- Swipeable sport boards -->
+    <div class="mobile-boards" id="mobileBoards">
+
+      <!-- National Teams -->
+      <div class="mobile-board">
+        <div class="board-header national">🦘 National Teams</div>
+        <div class="board-items" id="mobileTeams"></div>
+      </div>
+
+      <!-- Commonwealth Games -->
+      <div class="mobile-board">
+        <div class="board-header commonwealth">🌏 Glasgow 2026</div>
+        <div class="board-items" id="mobileCW"></div>
+      </div>
+
+      <!-- Summer Olympics -->
+      <div class="mobile-board">
+        <div class="board-header summer">☀️ LA 2028 Summer</div>
+        <div class="board-items" id="mobileSW"></div>
+      </div>
+
+      <!-- Winter Olympics -->
+      <div class="mobile-board">
+        <div class="board-header winter">❄️ Milano Cortina 2026</div>
+        <div class="board-items" id="mobileWI"></div>
+      </div>
+
+      <!-- Not at Glasgow -->
+      <div class="mobile-board">
+        <div class="board-header" style="background:#888;color:white;">❓ Not at Glasgow</div>
+        <div style="font-size:0.7rem;color:#888;padding:0.3rem 0.6rem;font-style:italic">🥉 Bronze if you find the match!</div>
+        <div class="board-items" id="mobileNG"></div>
+      </div>
+
+    </div>
+
+    <div class="swipe-hint">← swipe for more sports →</div>
+
+    <!-- Sticky lyrics header -->
+    <div class="mobile-lyrics-header" id="mobileLyricsHeader">Full Song Lyrics</div>
+
+    <!-- Lyrics -->
+    <div class="mobile-lyrics" id="mobileLyrics"></div>
+
+  </div>
+
 <!-- TOAST FEEDBACK -->
 <div class="toast" id="toast"></div>
 
@@ -842,6 +901,107 @@
   document.getElementById('emu').addEventListener('click', () => {
     showToast("🦅 That's me! The Emus! Touch Football! We got LEFT OUT!", false, 3000);
   });
+
+
+  // ============================================================
+  // MOBILE SETUP — clone boards and lyrics into mobile layout
+  // ============================================================
+  function isMobile() { return window.innerWidth <= 768; }
+
+  function setupMobile() {
+    if (!isMobile()) return;
+
+    // Clone teams into mobile board
+    const teamsItems = document.getElementById('boardNational');
+    if (teamsItems) document.getElementById('mobileTeams').innerHTML = teamsItems.innerHTML;
+
+    // Clone CW
+    const cwBoard = document.querySelector('[data-team="cw-athletics"]');
+    if (cwBoard) {
+      const cwParent = cwBoard.closest('.board-items');
+      if (cwParent) document.getElementById('mobileCW').innerHTML = cwParent.innerHTML;
+    }
+
+    // Clone Summer
+    const swBoard = document.querySelector('[data-team="sw-archery"]');
+    if (swBoard) {
+      const swParent = swBoard.closest('.board-items');
+      if (swParent) document.getElementById('mobileSW').innerHTML = swParent.innerHTML;
+    }
+
+    // Clone Winter
+    const wiBoard = document.querySelector('[data-team="wi-alpine"]');
+    if (wiBoard) {
+      const wiParent = wiBoard.closest('.board-items');
+      if (wiParent) document.getElementById('mobileWI').innerHTML = wiParent.innerHTML;
+    }
+
+    // Clone Not at Glasgow
+    const ngBoard = document.querySelector('[data-team="ng-badminton"]');
+    if (ngBoard) {
+      const ngParent = ngBoard.closest('.board-items');
+      if (ngParent) document.getElementById('mobileNG').innerHTML = ngParent.innerHTML;
+    }
+
+    // Clone lyrics
+    const lyricsBody = document.getElementById('lyricsBody');
+    if (lyricsBody) document.getElementById('mobileLyrics').innerHTML = lyricsBody.innerHTML;
+  }
+
+  // Update mobile lyrics header based on game state
+  function updateMobileHeader(msg) {
+    const header = document.getElementById('mobileLyricsHeader');
+    if (header) header.textContent = msg || 'Full Song Lyrics';
+  }
+
+  // Get correct medal message based on current tally
+  function medalMessage(type) {
+    if (type === 'bronze') return '🥉 Bronze medal! That sport used to be at the Commonwealth Games!';
+    if (type === 'silver') return '🥈 Silver medal! Keep going — you're on fire!';
+    return '🥇 Gold medal! Pick another team or sport to keep going.';
+  }
+
+  // Override selectSport to also scroll to lyrics on mobile
+  const _origSelectSport = selectSport;
+  function selectSport(btn, sport) {
+    _origSelectSport(btn, sport);
+    if (isMobile() && sport !== 'emus') {
+      updateMobileHeader('Good choice! Now find where it hides in the lyrics 👆');
+      const lyricsHeader = document.getElementById('mobileLyricsHeader');
+      if (lyricsHeader) {
+        setTimeout(() => lyricsHeader.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      }
+    }
+  }
+
+  // Patch showToast to also update mobile header
+  const _origShowToast = showToast;
+  function showToast(msg, good, dur) {
+    _origShowToast(msg, good, dur);
+    if (isMobile()) {
+      if (msg.includes('Not quite') || msg.includes('❌')) {
+        updateMobileHeader('Not quite — try a different line in the lyrics!');
+      } else if (msg.includes('Already found')) {
+        updateMobileHeader('Already found that one! Try another.');
+      }
+    }
+  }
+
+  // Patch addMedal to update mobile header on correct match
+  const _origAddMedal = addMedal;
+  function addMedal(type) {
+    _origAddMedal(type);
+    if (isMobile()) {
+      updateMobileHeader(medalMessage(type));
+      // Scroll back to top to see medal tally
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 300);
+    }
+  }
+
+  // Run setup on load
+  window.addEventListener('DOMContentLoaded', setupMobile);
+  window.addEventListener('resize', setupMobile);
+
 </script>
 
 <style>

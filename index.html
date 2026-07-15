@@ -180,6 +180,25 @@
     .sport-item.found { background: #fffbe6; color: #7a5000; }
     .sport-item.found::after { content: ' ★'; }
 
+    .paralympic-divider {
+      margin: 0.6rem 0.3rem 0.3rem;
+      padding: 0.5rem 0.6rem;
+      background: linear-gradient(135deg, #e8e8e8, #cfcfcf);
+      border-radius: 6px;
+      border-left: 4px solid #888;
+    }
+    .paralympic-divider-title {
+      font-weight: 700;
+      color: #4a4a4a;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+    }
+    .paralympic-divider-subtitle {
+      font-size: 0.72rem;
+      color: #6a6a6a;
+      margin-top: 0.15rem;
+    }
+
     /* LYRICS COLUMN */
     .lyrics-panel {
       background: rgba(255,255,255,0.95);
@@ -227,6 +246,11 @@
       transition: all 0.2s;
       border-radius: 3px;
       padding: 0 2px;
+    }
+
+    .lyric-phrase.team-clue {
+      color: #00843D;
+      font-weight: 600;
     }
 
     .lyric-phrase:hover {
@@ -343,15 +367,17 @@
     @media (max-width: 768px) {
       .main-layout { display: none !important; }
       .mobile-layout { display: block !important; }
-      .tally-bar { position: sticky; top: 0; z-index: 999; background: white; border-radius: 0; border-left: none; border-right: none; border-bottom: 1px solid #eee; padding: 0.5rem 0.75rem; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-      .mobile-instruction-box { position: sticky; top: 56px; z-index: 998; background: #f0f9f4; border: none; border-bottom: 1.5px solid #00843D; border-radius: 0; padding: 0.6rem 0.75rem; margin: 0; font-size: 0.85rem; color: #00843D; font-weight: 600; text-align: center; }
-      .mobile-boards { display: flex; overflow-x: auto; overflow-y: hidden; gap: 0.75rem; padding: 0.75rem; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+      header { padding: 0.6rem 0.75rem !important; margin-bottom: 0.5rem; }
+      .title-treatment { font-size: 1.4rem; }
+      .subtitle { font-size: 0.75rem; margin-top: 0.15rem; }
+      .tally-bar { position: sticky; top: 0; z-index: 999; background: white; border-radius: 0; border-left: none; border-right: none; border-bottom: 1px solid #eee; padding: 0.4rem 0.75rem; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+      .tally-bar #medalRow .match-instruction { max-width: none !important; width: 100%; display: block !important; font-size: 0.85rem !important; line-height: 1.25 !important; }
+      .mobile-boards { display: flex; overflow-x: auto; overflow-y: visible; gap: 0.75rem; padding: 0.75rem; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
       .mobile-boards::-webkit-scrollbar { display: none; }
-      .mobile-board { flex: 0 0 45vw;
+      .mobile-board { flex: 0 0 45vw; background: white; border-radius: 10px; border: 1px solid #e5e5e5; overflow-x: hidden; overflow-y: auto; height: 380px; flex-shrink: 0;
       }
-      .mobile-board-wide { flex: 0 0 70vw !important; scroll-snap-align: start; background: white; border-radius: 10px; border: 1px solid #e5e5e5; overflow-x: hidden; overflow-y: auto; height: 320px; flex-shrink: 0; }
-      .mobile-board .board-header { position: sticky; top: 0; z-index: 5; }
-      .swipe-hint { text-align: center; font-size: 0.75rem; color: #aaa; padding: 0.2rem 0 0.5rem; }
+      .mobile-board-wide { flex: 0 0 70vw !important; scroll-snap-align: start; background: white; border-radius: 10px; border: 1px solid #e5e5e5; overflow-x: hidden; overflow-y: auto; height: 380px; flex-shrink: 0; }
+      .mobile-board .board-header { position: -webkit-sticky; position: sticky; top: 0; z-index: 20; }
       .mobile-lyrics-header { position: sticky; top: 56px; z-index: 99; background: #fffbea; border: 1.5px solid #00843D; border-radius: 8px; padding: 0.75rem 1rem; margin: 0 0.75rem 0.5rem; font-size: 0.9rem; font-weight: 700; color: #00843D; text-align: center; }
       .mobile-lyrics { padding: 0 0.75rem 3rem 1.5rem; font-size: 1rem; line-height: 2; }
       .mobile-lyrics-container {
@@ -404,7 +430,7 @@
       <div class="tally-count" style="color:#a07040;"><span id="bronzeCount">0</span> <span style="font-size:0.9rem;color:#cd7f32">🥉</span></div>
     </div>
     <div id="medalRow" style="display:flex;flex-wrap:wrap;gap:3px;flex:1;min-height:36px;align-items:flex-start;padding:4px 0;">
-      <span style="font-size:1rem;color:#0066cc;font-weight:700;text-align:center;line-height:1.4;max-width:200px;display:inline-block">Match a team or sport to the words that represent them in the lyrics!</span>
+      <span class="match-instruction" style="font-size:1rem;color:#0066cc;font-weight:700;text-align:center;line-height:1.4;display:inline-block">Match a team or sport to the words that represent them in the lyrics and Win Medals!</span>
     </div>
   </div>
 
@@ -421,7 +447,6 @@
           <button class="sport-item" data-team="diamonds" onclick="selectSport(this,'diamonds')">Diamonds — Netball</button>
           <button class="sport-item" data-team="dolphins" onclick="selectSport(this,'dolphins')">Dolphins — Swimming</button>
           <button class="sport-item" data-team="emeralds" onclick="selectSport(this,'emeralds')">Emeralds — Women's Baseball</button>
-          <button class="sport-item" data-team="gliders" onclick="selectSport(this,'gliders')">Gliders — Women's Wheelchair Basketball</button>
           <button class="sport-item" data-team="hockeyroos" onclick="selectSport(this,'hockeyroos')">Hockeyroos — Women's Hockey</button>
           <button class="sport-item" data-team="jillaroos" onclick="selectSport(this,'jillaroos')">Jillaroos — Women's Rugby League</button>
           <button class="sport-item" data-team="kangaroos" onclick="selectSport(this,'kangaroos')">Kangaroos — Rugby League</button>
@@ -429,15 +454,20 @@
           <button class="sport-item" data-team="matildas" onclick="selectSport(this,'matildas')">Matildas — Women's Football</button>
           <button class="sport-item" data-team="olyroos" onclick="selectSport(this,'olyroos')">Olyroos — Olympic Football</button>
           <button class="sport-item" data-team="opals" onclick="selectSport(this,'opals')">Opals — Women's Basketball</button>
-          <button class="sport-item" data-team="rollers" onclick="selectSport(this,'rollers')">Rollers — Men's Wheelchair Basketball</button>
           <button class="sport-item" data-team="sharks" onclick="selectSport(this,'sharks')">Sharks — Men's Water Polo</button>
           <button class="sport-item" data-team="socceroos" onclick="selectSport(this,'socceroos')">Socceroos — Men's Football</button>
-          <button class="sport-item" data-team="steelers" onclick="selectSport(this,'steelers')">Steelers — Wheelchair Rugby</button>
           <button class="sport-item" data-team="stingers" onclick="selectSport(this,'stingers')">Stingers — Women's Water Polo</button>
           <button class="sport-item" data-team="volleyroos" onclick="selectSport(this,'volleyroos')">Volleyroos — Volleyball</button>
           <button class="sport-item" data-team="wallabies" onclick="selectSport(this,'wallabies')">Wallabies — Rugby Union</button>
           <button class="sport-item" data-team="wallaroos" onclick="selectSport(this,'wallaroos')">Wallaroos — Women's Rugby Union</button>
           <button class="sport-item" data-team="young-socceroos" onclick="selectSport(this,'young-socceroos')">Young Socceroos — Youth Football</button>
+          <div class="paralympic-divider">
+            <div class="paralympic-divider-title">🥈 Paralympic Sports</div>
+            <div class="paralympic-divider-subtitle">Match the actions used by these teams</div>
+          </div>
+          <button class="sport-item" data-team="steelers" onclick="selectSport(this,'steelers')">Steelers — Wheelchair Rugby</button>
+          <button class="sport-item" data-team="gliders" onclick="selectSport(this,'gliders')">Gliders — Women's Wheelchair Basketball</button>
+          <button class="sport-item" data-team="rollers" onclick="selectSport(this,'rollers')">Rollers — Men's Wheelchair Basketball</button>
         </div>
       </div>
 
@@ -477,9 +507,9 @@
         <span class="lyric-line">Australia's Green and Gold.</span>
         <span class="lyric-line blank"></span>
 
-        <span class="lyric-line">We honour our <span class="lyric-phrase" data-matches="marsupials" onclick="checkMatch(this)">marsupials</span>,</span>
-        <span class="lyric-line">their <span class="lyric-phrase" data-matches="laughing" onclick="checkMatch(this)">laughing</span>, <span class="lyric-phrase" data-matches="swimming mates" onclick="checkMatch(this)">swimming mates</span>,</span>
-        <span class="lyric-line">the <span class="lyric-phrase" data-matches="gems" onclick="checkMatch(this)">gems</span> within our southern land</span>
+        <span class="lyric-line">We honour our <span class="lyric-phrase team-clue" data-matches="marsupials" onclick="checkMatch(this)">marsupials</span>,</span>
+        <span class="lyric-line">their <span class="lyric-phrase team-clue" data-matches="laughing" onclick="checkMatch(this)">laughing</span>, <span class="lyric-phrase team-clue" data-matches="swimming mates" onclick="checkMatch(this)">swimming mates</span>,</span>
+        <span class="lyric-line">the <span class="lyric-phrase team-clue" data-matches="gems" onclick="checkMatch(this)">gems</span> within our southern land</span>
         <span class="lyric-line">shine like stars among our greats.</span>
         <span class="lyric-line blank"></span>
 
@@ -492,7 +522,7 @@
 
         <span class="lyric-line">We <span class="lyric-phrase" data-matches="kick" onclick="checkMatch(this)">kick</span>, we <span class="lyric-phrase" data-matches="strike" onclick="checkMatch(this)">strike</span>, we <span class="lyric-phrase" data-matches="throw" onclick="checkMatch(this)">throw</span>,</span>
         <span class="lyric-line">each <span class="lyric-phrase" data-matches="ball" onclick="checkMatch(this)">ball in striving for our goal</span>.</span>
-        <span class="lyric-line">We <span class="lyric-phrase" data-matches="run" onclick="checkMatch(this)">run</span>, we <span class="lyric-phrase" data-matches="ride" onclick="checkMatch(this)">chase</span>, we <span class="lyric-phrase" data-matches="ride" onclick="checkMatch(this)">ride</span>,</span>
+        <span class="lyric-line">We <span class="lyric-phrase" data-matches="run" onclick="checkMatch(this)">run</span>, we <span class="lyric-phrase" data-matches="chase" onclick="checkMatch(this)">chase</span>, we <span class="lyric-phrase" data-matches="ride" onclick="checkMatch(this)">ride</span>,</span>
         <span class="lyric-line"><span class="lyric-phrase" data-matches="jump" onclick="checkMatch(this)">Jump</span> and <span class="lyric-phrase" data-matches="climb" onclick="checkMatch(this)">climb</span> and <span class="lyric-phrase" data-matches="glide" onclick="checkMatch(this)">glide</span>,</span>
         <span class="lyric-line">We <span class="lyric-phrase" data-matches="swim" onclick="checkMatch(this)">swim</span> and <span class="lyric-phrase" data-matches="dive" onclick="checkMatch(this)">dive</span> and <span class="lyric-phrase" data-matches="slide" onclick="checkMatch(this)">slide</span>.</span>
         <span class="lyric-line blank"></span>
@@ -504,13 +534,13 @@
         <span class="lyric-line">Australia's Green and Gold.</span>
         <span class="lyric-line blank"></span>
 
-        <span class="lyric-line">It's the <span class="lyric-phrase" data-matches="aussie spirit" onclick="checkMatch(this)">Aussie Spirit</span> in me and you,</span>
+        <span class="lyric-line">It's the <span class="lyric-phrase team-clue" data-matches="aussie spirit" onclick="checkMatch(this)">Aussie Spirit</span> in me and you,</span>
         <span class="lyric-line">we play it fair, our hearts and <span class="lyric-phrase" data-matches="aim" onclick="checkMatch(this)">aim</span> are true,</span>
         <span class="lyric-line">the world will know our <span class="lyric-phrase" data-matches="strength" onclick="checkMatch(this)">strength</span>,</span>
         <span class="lyric-line">we show we are fair dinkum and true blue.</span>
         <span class="lyric-line blank"></span>
 
-        <span class="lyric-line">So let's Waltzing our <span class="lyric-phrase" data-matches="matildas" onclick="checkMatch(this)">Matildas</span>,</span>
+        <span class="lyric-line">So let's Waltzing our <span class="lyric-phrase team-clue" data-matches="matildas" onclick="checkMatch(this)">Matildas</span>,</span>
         <span class="lyric-line">And raise a cheer,</span>
         <span class="lyric-line">So all can hear,</span>
         <span class="lyric-line">For the stories to be told,</span>
@@ -571,6 +601,13 @@
           <button class="sport-item" data-team="sw-weightlifting" onclick="selectSport(this,'sw-weightlifting')">Weightlifting</button>
           <button class="sport-item" data-team="sw-triathlon" onclick="selectSport(this,'sw-triathlon')">Triathlon</button>
           <button class="sport-item" data-team="sw-sailing" onclick="selectSport(this,'sw-sailing')">Sailing</button>
+          <button class="sport-item" data-team="sw-baseball" onclick="selectSport(this,'sw-baseball')">Baseball</button>
+          <button class="sport-item" data-team="sw-canoe" onclick="selectSport(this,'sw-canoe')">Canoe</button>
+          <button class="sport-item" data-team="sw-flagfootball" onclick="selectSport(this,'sw-flagfootball')">Flag Football</button>
+          <button class="sport-item" data-team="sw-handball" onclick="selectSport(this,'sw-handball')">Handball</button>
+          <button class="sport-item" data-team="sw-lacrosse" onclick="selectSport(this,'sw-lacrosse')">Lacrosse</button>
+          <button class="sport-item" data-team="sw-softball" onclick="selectSport(this,'sw-softball')">Softball</button>
+          <button class="sport-item" data-team="sw-waterpolo" onclick="selectSport(this,'sw-waterpolo')">Water Polo</button>
         </div>
       </div>
 
@@ -622,7 +659,6 @@
 
   <!-- MOBILE LAYOUT -->
   <div class="mobile-layout">
-    <div class="mobile-instruction-box">Pick a team or sport then find it in the lyrics to win your first Gold Medal! 🥇</div>
     <div class="mobile-boards">
       <div class="mobile-board mobile-board-wide">
         <div class="board-header national">🦘 National Teams</div>
@@ -646,7 +682,6 @@
         <div class="board-items" id="mobileNG"></div>
       </div>
     </div>
-    <div class="swipe-hint">← swipe for more sports →</div>
   </div>
   <!-- BOTTOM LYRICS CONTAINER -->
   <div class="mobile-lyrics-container">
@@ -673,6 +708,7 @@
   const SILVER_MAX = 38;
   const BRONZE_MAX = 14;
   const SYDNEY_MILESTONE = 59;
+  const GOLD_ICON_CAP = 18; // Paris 2024 gold count — icons freeze here, tally number keeps counting
 
   let goldFound = 0;
   let silverFound = 0;
@@ -700,9 +736,9 @@
     'diamonds':         ['gems'],
     'opals':            ['gems'],
     'emeralds':         ['gems'],
-    'steelers':         ['ball'],
-    'gliders':          ['ball'],
-    'rollers':          ['ball'],
+    'steelers':         ['throw','chase','ball'],
+    'gliders':          ['throw','aim','chase','ball'],
+    'rollers':          ['throw','aim','chase','ball'],
     'aussie-spirit':    ['aussie spirit'],
     'matildas':         ['matildas'],
     'cw-athletics':     ['run','throw','jump'],
@@ -721,18 +757,18 @@
     'sw-baseball':      ['strike','throw'],
     'sw-basketball':    ['throw'],
     'sw-boxing':        ['strike'],
-    'sw-canoe':         ['ride','glide'],
+    'sw-canoe':         ['glide'],
     'sw-climbing':      ['climb'],
     'sw-cycling':       ['ride'],
     'sw-diving':        ['dive'],
     'sw-equestrian':    ['ride'],
     'sw-fencing':       ['strike','aim'],
-    'sw-flagfootball':  ['kick','throw'],
+    'sw-flagfootball':  ['kick','throw','run','ball','chase'],
     'sw-gymnastics':    ['strength'],
     'sw-handball':      ['throw'],
     'sw-hockey':        ['strike'],
     'sw-judo':          ['strength'],
-    'sw-lacrosse':      ['run','throw'],
+    'sw-lacrosse':      ['run','throw','strike'],
     'sw-rowing':        ['glide'],
     'sw-sailing':       ['glide'],
     'sw-shooting':      ['aim'],
@@ -744,7 +780,7 @@
     'sw-triathlon':     ['swim','run','ride'],
     'sw-volleyball':    ['strike'],
     'sw-beachvolley':   ['strike'],
-    'sw-waterpolo':     ['swim','throw'],
+    'sw-waterpolo':     ['swim','throw','ball'],
     'sw-weightlifting': ['strength'],
     'sw-wrestling':     ['strength'],
     'wi-alpine':        ['glide','slide'],
@@ -801,6 +837,15 @@
     updateInstruction(`Good choice! Now find where it hides in the lyrics 👉`);
   }
 
+  // Words that represent a GROUP of national teams (marsupials, laughing,
+  // swimming mates, gems) only get their full "found" highlight once every
+  // team assigned to that word has been matched — not on the first hit.
+  const GROUP_COMPLETE_WORDS = ['marsupials', 'laughing', 'swimming mates', 'gems'];
+  function isGroupWordComplete(word) {
+    const teamsForWord = Object.keys(matchMap).filter(id => matchMap[id].includes(word));
+    return teamsForWord.length > 0 && teamsForWord.every(id => foundMatches.has(id + '::' + word));
+  }
+
   function checkMatch(phraseEl) {
     if (!selectedSport) {
       showToast('👆 Pick a team or sport from the list first!', false);
@@ -816,7 +861,9 @@
       const key = selectedSport + '::' + phraseEl.dataset.matches;
       if (!foundMatches.has(key)) {
         foundMatches.add(key);
-        phraseEl.classList.add('found');
+        if (!GROUP_COMPLETE_WORDS.includes(phraseZone) || isGroupWordComplete(phraseZone)) {
+          phraseEl.classList.add('found');
+        }
         if (selectedBtn) { selectedBtn.classList.remove('selected'); selectedBtn.classList.add('found'); }
 
         const bronze = isBronze(selectedSport);
@@ -873,6 +920,11 @@
   function addMedal(type) {
     const row = document.getElementById('medalRow');
     if (goldFound + silverFound + bronzeFound === 1) row.innerHTML = '';
+    // Only gold ever renders an icon, and only up to the Paris 2024 cap.
+    // Silver and bronze are numeric-only (tally board total), and gold
+    // freezes visually at 18 — the tally number keeps climbing beyond that.
+    if (type !== 'gold') return;
+    if (goldFound > GOLD_ICON_CAP) return;
     const span = document.createElement('span');
     span.innerHTML = medal(type);
     row.appendChild(span);
@@ -886,12 +938,31 @@
 
   function checkMilestones() {
     const total = goldFound + silverFound + bronzeFound;
+    if (goldFound === GOLD_ICON_CAP) {
+      showParisPopup();
+    }
     if (total === SYDNEY_MILESTONE) {
       showSydneyPopup();
     }
     if (goldFound >= GOLD_MAX && silverFound >= SILVER_MAX && bronzeFound >= BRONZE_MAX) {
       setTimeout(() => document.getElementById('celebration').classList.add('show'), 800);
     }
+  }
+
+  // Note: per-Olympiad gold-count milestones (e.g. "You've now passed Australia
+  // at the XVII, XX, XXX, XXXI Olympiads!") are a deferred future enhancement —
+  // Chris has the historical data from Charlie, not built yet.
+  function showParisPopup() {
+    const popup = document.createElement('div');
+    popup.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+      background:white;border:3px solid #FFD700;border-radius:16px;padding:2rem;
+      text-align:center;z-index:300;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.3);`;
+    popup.innerHTML = `
+      <div style="font-size:3rem;margin-bottom:0.5rem">🥇</div>
+      <div style="font-size:1.3rem;font-weight:700;color:#00843D;margin-bottom:0.5rem">You've won as many Gold Medals as Australia did at the Paris 2024 Olympics!</div>
+      <div style="font-size:0.9rem;color:#666;margin-bottom:1rem">Australia won 18 gold medals at Paris 2024. Your class just matched it! Keep going — the tally number will keep counting up.</div>
+      <button onclick="this.parentElement.remove()" style="background:#00843D;color:white;border:none;padding:0.6rem 1.5rem;border-radius:99px;font-size:1rem;cursor:pointer;font-weight:600">Keep going! 🚀</button>`;
+    document.body.appendChild(popup);
   }
 
   function showSydneyPopup() {
@@ -937,13 +1008,11 @@
     // Create sticky header wrapper and move tally + instruction into it
     var mobileLayout = document.querySelector('.mobile-layout');
     var tally = document.querySelector('.tally-bar');
-    var instruction = document.querySelector('.mobile-instruction-box');
-    if (mobileLayout && tally && instruction) {
+    if (mobileLayout && tally) {
       var stickyHdr = document.createElement('div');
       stickyHdr.style.cssText = 'position:sticky;top:0;z-index:999;background:white;';
       mobileLayout.insertBefore(stickyHdr, mobileLayout.firstChild);
       stickyHdr.appendChild(tally);
-      stickyHdr.appendChild(instruction);
     }
     // Clone national teams
     var src = document.getElementById('boardNational');
@@ -1198,7 +1267,7 @@
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.55);
     display: flex; align-items: center; justify-content: center;
-    z-index: 500;
+    z-index: 9999;
     opacity: 0; pointer-events: none;
     transition: opacity 0.2s ease;
     padding: 1rem;

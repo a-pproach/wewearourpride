@@ -199,6 +199,27 @@
       margin-top: 0.15rem;
     }
 
+    .press-hold-invite {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2000;
+      padding: 1rem;
+      cursor: pointer;
+    }
+    .press-hold-invite-card {
+      background: white;
+      border: 3px solid #FFD700;
+      border-radius: 16px;
+      padding: 1.1rem 1.4rem;
+      text-align: center;
+      max-width: 300px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .press-hold-invite-icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
+    .press-hold-invite-text { font-weight: 700; color: #00843D; font-size: 1rem; line-height: 1.35; }
+    .press-hold-invite-tap { font-size: 0.7rem; color: #999; margin-top: 0.5rem; }
+
     /* LYRICS COLUMN */
     .lyrics-panel {
       background: rgba(255,255,255,0.95);
@@ -463,7 +484,7 @@
           <button class="sport-item" data-team="wallaroos" onclick="selectSport(this,'wallaroos')">Wallaroos — Women's Rugby Union</button>
           <button class="sport-item" data-team="young-socceroos" onclick="selectSport(this,'young-socceroos')">Young Socceroos — Youth Football</button>
           <div class="paralympic-divider">
-            <div class="paralympic-divider-title">🥈 Paralympic Sports</div>
+            <div class="paralympic-divider-title">🥈 Paralympic Teams</div>
             <div class="paralympic-divider-subtitle">Match the actions used by these teams</div>
           </div>
           <button class="sport-item" data-team="steelers" onclick="selectSport(this,'steelers')">Steelers — Wheelchair Rugby</button>
@@ -823,6 +844,26 @@
     return goldTeams.includes(sport);
   }
 
+  var wikiDiscovered = false;
+  function isTeamId(id) {
+    return !/^(cw|sw|wi|ng)-/.test(id);
+  }
+  function showPressHoldInvite(sport) {
+    if (wikiDiscovered || !wikiPages[sport]) return;
+    var existing = document.querySelector('.press-hold-invite');
+    if (existing) existing.remove();
+    var kind = isTeamId(sport) ? 'team' : 'sport';
+    var invite = document.createElement('div');
+    invite.className = 'press-hold-invite';
+    invite.innerHTML = '<div class="press-hold-invite-card">' +
+      '<div class="press-hold-invite-icon">👉</div>' +
+      '<div class="press-hold-invite-text">Press &amp; hold (or double-click) to learn about this ' + kind + '!</div>' +
+      '<div class="press-hold-invite-tap">tap anywhere to continue</div>' +
+      '</div>';
+    invite.addEventListener('click', function() { invite.remove(); });
+    document.body.appendChild(invite);
+  }
+
   function selectSport(btn, sport) {
     updateMobileHeader('Good choice! Now find where it hides in the lyrics 👆');
     if (sport === 'emus') {
@@ -836,6 +877,7 @@
     selectedSport = sport;
     btn.classList.add('selected');
     updateInstruction(`Good choice! Now find where it hides in the lyrics 👉`);
+    showPressHoldInvite(sport);
   }
 
   // Words that represent a GROUP of national teams (marsupials, laughing,
@@ -1096,8 +1138,8 @@
     'sw-boxing':        "Boxing",
     'sw-canoe':         "Canoeing",
     'sw-climbing':      "Sport_climbing",
-    'sw-cycling':       "Cycling",
-    'sw-diving':        "Diving",
+    'sw-cycling':       "Cycle_sport",
+    'sw-diving':        "Diving_(sport)",
     'sw-equestrian':    "Equestrianism",
     'sw-fencing':       "Fencing",
     'sw-flagfootball':  "Flag_football",
@@ -1139,7 +1181,7 @@
     'ng-cricket':       "Cricket",
     'ng-roadcycling':   "Road_bicycle_racing",
     'ng-mtbcycling':    "Mountain_bike_racing",
-    'ng-diving':        "Diving",
+    'ng-diving':        "Diving_(sport)",
     'ng-rhythmic':      "Rhythmic_gymnastics",
     'ng-hockey':        "Field_hockey",
     'ng-rugby7s':       "Rugby_sevens",
@@ -1215,6 +1257,7 @@
   function openWikiModal(sport) {
     var title = wikiPages[sport];
     if (!title) return;
+    wikiDiscovered = true;
     var modal = document.getElementById('wikiModal');
     if (!modal) {
       modal = document.createElement('div');

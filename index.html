@@ -333,7 +333,7 @@
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,132,61,0.92);
-      z-index: 200;
+      z-index: 2000;
       align-items: center;
       justify-content: center;
       flex-direction: column;
@@ -370,7 +370,8 @@
       header { padding: 0.6rem 0.75rem !important; margin-bottom: 0.5rem; }
       .title-treatment { font-size: 1.4rem; }
       .subtitle { font-size: 0.75rem; margin-top: 0.15rem; }
-      .tally-bar { position: sticky; top: 0; z-index: 999; background: white; border-radius: 0; border-left: none; border-right: none; border-bottom: 1px solid #eee; padding: 0.4rem 0.75rem; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+      .tally-bar { position: sticky; top: 0; z-index: 999; background: white; border-radius: 0; border-left: none; border-right: none; border-bottom: 1px solid #eee; padding: 0.4rem 0.75rem; box-shadow: 0 2px 6px rgba(0,0,0,0.08); flex-direction: column; align-items: stretch; gap: 0.3rem; }
+      .tally-bar #medalRow { width: 100%; }
       .tally-bar #medalRow .match-instruction { max-width: none !important; width: 100%; display: block !important; font-size: 0.85rem !important; line-height: 1.25 !important; }
       .mobile-boards { display: flex; overflow-x: auto; overflow-y: visible; gap: 0.75rem; padding: 0.75rem; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
       .mobile-boards::-webkit-scrollbar { display: none; }
@@ -956,7 +957,7 @@
     const popup = document.createElement('div');
     popup.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
       background:white;border:3px solid #FFD700;border-radius:16px;padding:2rem;
-      text-align:center;z-index:300;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.3);`;
+      text-align:center;z-index:2000;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.3);`;
     popup.innerHTML = `
       <div style="font-size:3rem;margin-bottom:0.5rem">🥇</div>
       <div style="font-size:1.3rem;font-weight:700;color:#00843D;margin-bottom:0.5rem">You've won as many Gold Medals as Australia did at the Paris 2024 Olympics!</div>
@@ -969,7 +970,7 @@
     const popup = document.createElement('div');
     popup.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
       background:white;border:3px solid #FFD700;border-radius:16px;padding:2rem;
-      text-align:center;z-index:300;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.3);`;
+      text-align:center;z-index:2000;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.3);`;
     popup.innerHTML = `
       <div style="font-size:3rem;margin-bottom:0.5rem">🏅</div>
       <div style="font-size:1.3rem;font-weight:700;color:#00843D;margin-bottom:0.5rem">You've won more medals than Australia at the Sydney Olympics!!!</div>

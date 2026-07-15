@@ -980,6 +980,208 @@
   }
 
   window.addEventListener('DOMContentLoaded', setupMobile);
+
+  // === WIKIPEDIA LONG-PRESS (mobile) / DOUBLE-CLICK (desktop) ===
+  // Short tap/click still only selects (selectSport, untouched).
+  // Long-press or double-click opens an in-page Wikipedia preview instead.
+  var wikiPages = {
+    'aussie-spirit':    "Australia_women%27s_national_softball_team",
+    'boomers':          "Australia_men%27s_national_basketball_team",
+    'burras':           "Australia_men%27s_national_under-21_field_hockey_team",
+    'diamonds':         "Australia_national_netball_team",
+    'dolphins':         "Australian_Swim_Team",
+    'emeralds':         "Australia_women%27s_national_baseball_team",
+    'gliders':          "Australia_women%27s_national_wheelchair_basketball_team",
+    'hockeyroos':       "Australia_women%27s_national_field_hockey_team",
+    'jillaroos':        "Australia_women%27s_national_rugby_league_team",
+    'kangaroos':        "Australia_national_rugby_league_team",
+    'kookaburras':      "Australia_men%27s_national_field_hockey_team",
+    'matildas':         "Australia_women%27s_national_soccer_team",
+    'olyroos':          "Australia_men%27s_national_under-23_soccer_team",
+    'opals':            "Australia_women%27s_national_basketball_team",
+    'rollers':          "Australia_men%27s_national_wheelchair_basketball_team",
+    'sharks':           "Australia_men%27s_national_water_polo_team",
+    'socceroos':        "Australia_men%27s_national_soccer_team",
+    'steelers':         "Australia_national_wheelchair_rugby_team",
+    'stingers':         "Australia_women%27s_national_water_polo_team",
+    'volleyroos':       "Australia_men%27s_national_volleyball_team",
+    'wallabies':        "Australia_national_rugby_union_team",
+    'wallaroos':        "Australia_women%27s_national_rugby_union_team",
+    'young-socceroos':  "Australia_men%27s_national_under-20_soccer_team",
+    'cw-athletics':     "Athletics_(sport)",
+    'cw-swimming':      "Swimming_(sport)",
+    'cw-basketball':    "3x3_basketball",
+    'cw-cycling':       "Track_cycling",
+    'cw-weightlifting': "Weightlifting",
+    'cw-bowls':         "Bowls",
+    'cw-gymnastics':    "Artistic_gymnastics",
+    'cw-boxing':        "Boxing",
+    'cw-judo':          "Judo",
+    'cw-netball':       "Netball",
+    'sw-archery':       "Archery",
+    'sw-athletics':     "Athletics_(sport)",
+    'sw-badminton':     "Badminton",
+    'sw-baseball':      "Baseball",
+    'sw-basketball':    "Basketball",
+    'sw-boxing':        "Boxing",
+    'sw-canoe':         "Canoeing",
+    'sw-climbing':      "Sport_climbing",
+    'sw-cycling':       "Cycling",
+    'sw-diving':        "Diving",
+    'sw-equestrian':    "Equestrianism",
+    'sw-fencing':       "Fencing",
+    'sw-flagfootball':  "Flag_football",
+    'sw-gymnastics':    "Gymnastics",
+    'sw-handball':      "Handball",
+    'sw-hockey':        "Field_hockey",
+    'sw-judo':          "Judo",
+    'sw-lacrosse':      "Lacrosse",
+    'sw-rowing':        "Rowing_(sport)",
+    'sw-sailing':       "Sailing_(sport)",
+    'sw-shooting':      "Shooting_sports",
+    'sw-softball':      "Softball",
+    'sw-swimming':      "Swimming_(sport)",
+    'sw-tabletennis':   "Table_tennis",
+    'sw-taekwondo':     "Taekwondo",
+    'sw-tennis':        "Tennis",
+    'sw-triathlon':     "Triathlon",
+    'sw-volleyball':    "Volleyball",
+    'sw-beachvolley':   "Beach_volleyball",
+    'sw-waterpolo':     "Water_polo",
+    'sw-weightlifting': "Weightlifting",
+    'sw-wrestling':     "Wrestling",
+    'wi-alpine':        "Alpine_skiing",
+    'wi-biathlon':      "Biathlon",
+    'wi-bobsleigh':     "Bobsleigh",
+    'wi-crosscountry':  "Cross-country_skiing",
+    'wi-curling':       "Curling",
+    'wi-figureskate':   "Figure_skating",
+    'wi-freestyle':     "Freestyle_skiing",
+    'wi-icehockey':     "Ice_hockey",
+    'wi-luge':          "Luge",
+    'wi-shorttrack':    "Short-track_speed_skating",
+    'wi-skeleton':      "Skeleton_(sport)",
+    'wi-skijump':       "Ski_jumping",
+    'wi-snowboard':     "Snowboarding",
+    'wi-speedskate':    "Speed_skating",
+    'ng-badminton':     "Badminton",
+    'ng-beachvolley':   "Beach_volleyball",
+    'ng-cricket':       "Cricket",
+    'ng-roadcycling':   "Road_bicycle_racing",
+    'ng-mtbcycling':    "Mountain_bike_racing",
+    'ng-diving':        "Diving",
+    'ng-rhythmic':      "Rhythmic_gymnastics",
+    'ng-hockey':        "Field_hockey",
+    'ng-rugby7s':       "Rugby_sevens",
+    'ng-shooting':      "Shooting_sports",
+    'ng-squash':        "Squash_(sport)",
+    'ng-tabletennis':   "Table_tennis",
+    'ng-triathlon':     "Triathlon",
+    'ng-wrestling':     "Wrestling"
+  };
+
+  (function() {
+    var LONG_PRESS_MS = 500;
+    var MOVE_CANCEL_PX = 10;
+    var pressTimer = null;
+    var startX = 0, startY = 0;
+    var suppressClickUntil = 0;
+    var lastClickTime = 0, lastClickBtn = null;
+
+    function getSportBtn(el) {
+      return el && el.closest ? el.closest('.sport-item') : null;
+    }
+
+    document.addEventListener('touchstart', function(e) {
+      var btn = getSportBtn(e.target);
+      if (!btn) return;
+      var touch = e.touches[0];
+      startX = touch.clientX; startY = touch.clientY;
+      clearTimeout(pressTimer);
+      pressTimer = setTimeout(function() {
+        pressTimer = null;
+        suppressClickUntil = Date.now() + 500;
+        if (navigator.vibrate) navigator.vibrate(15);
+        openWikiModal(btn.dataset.team);
+      }, LONG_PRESS_MS);
+    }, { passive: true });
+
+    document.addEventListener('touchmove', function(e) {
+      if (!pressTimer) return;
+      var touch = e.touches[0];
+      if (Math.abs(touch.clientX - startX) > MOVE_CANCEL_PX || Math.abs(touch.clientY - startY) > MOVE_CANCEL_PX) {
+        clearTimeout(pressTimer); pressTimer = null;
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchend', function() {
+      clearTimeout(pressTimer); pressTimer = null;
+    }, { passive: true });
+
+    // Capture phase: intercept the synthetic click after a long-press,
+    // and detect desktop double-clicks — both divert to the wiki modal
+    // instead of letting selectSport() fire (or toggle twice).
+    document.addEventListener('click', function(e) {
+      var btn = getSportBtn(e.target);
+      if (!btn) return;
+
+      if (Date.now() < suppressClickUntil) {
+        e.preventDefault(); e.stopImmediatePropagation();
+        suppressClickUntil = 0;
+        return;
+      }
+
+      var now = Date.now();
+      if (lastClickBtn === btn && (now - lastClickTime) < 350) {
+        e.preventDefault(); e.stopImmediatePropagation();
+        lastClickBtn = null; lastClickTime = 0;
+        openWikiModal(btn.dataset.team);
+        return;
+      }
+      lastClickBtn = btn; lastClickTime = now;
+    }, true);
+  })();
+
+  function openWikiModal(sport) {
+    var title = wikiPages[sport];
+    if (!title) return;
+    var modal = document.getElementById('wikiModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'wikiModal';
+      modal.className = 'wiki-modal-overlay';
+      modal.innerHTML = '<div class="wiki-modal-card">' +
+        '<button class="wiki-modal-close" aria-label="Close">✕</button>' +
+        '<div class="wiki-modal-body"><div class="wiki-modal-loading">Loading…</div></div>' +
+        '</div>';
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function(e) { if (e.target === modal) closeWikiModal(); });
+      modal.querySelector('.wiki-modal-close').addEventListener('click', closeWikiModal);
+    }
+    modal.classList.add('show');
+    var body = modal.querySelector('.wiki-modal-body');
+    body.innerHTML = '<div class="wiki-modal-loading">Loading…</div>';
+
+    fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + title)
+      .then(function(r) { if (!r.ok) throw new Error('not found'); return r.json(); })
+      .then(function(data) {
+        var thumb = (data.thumbnail && data.thumbnail.source)
+          ? '<img src="' + data.thumbnail.source + '" alt="" class="wiki-modal-thumb">' : '';
+        body.innerHTML = thumb +
+          '<h3 class="wiki-modal-title">' + (data.title || '') + '</h3>' +
+          '<p class="wiki-modal-extract">' + (data.extract || '') + '</p>' +
+          '<a class="wiki-modal-link" href="https://en.wikipedia.org/wiki/' + title + '" target="_blank" rel="noopener">Read full article on Wikipedia ↗</a>';
+      })
+      .catch(function() {
+        body.innerHTML = '<p class="wiki-modal-extract">Couldn\'t load a preview right now.</p>' +
+          '<a class="wiki-modal-link" href="https://en.wikipedia.org/wiki/' + title + '" target="_blank" rel="noopener">Open on Wikipedia ↗</a>';
+      });
+  }
+
+  function closeWikiModal() {
+    var modal = document.getElementById('wikiModal');
+    if (modal) modal.classList.remove('show');
+  }
 </script>
 
 <style>
@@ -991,11 +1193,49 @@
 </style>
 
 <style>
-  @keyframes pop {
-    0% { transform: scale(0); opacity: 0; }
-    70% { transform: scale(1.2); }
-    100% { transform: scale(1); opacity: 1; }
+  /* === WIKIPEDIA PREVIEW MODAL === */
+  .wiki-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 500;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease;
+    padding: 1rem;
   }
+  .wiki-modal-overlay.show { opacity: 1; pointer-events: auto; }
+  .wiki-modal-card {
+    background: white;
+    border: 3px solid #FFD700;
+    border-radius: 16px;
+    max-width: 420px; width: 100%;
+    max-height: 82vh; overflow-y: auto;
+    position: relative;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    transform: scale(0.95);
+    transition: transform 0.2s ease;
+  }
+  .wiki-modal-overlay.show .wiki-modal-card { transform: scale(1); }
+  .wiki-modal-close {
+    position: absolute; top: 0.7rem; right: 0.7rem;
+    background: #f0f0f0; border: none; border-radius: 50%;
+    width: 32px; height: 32px; font-size: 1rem; line-height: 1;
+    cursor: pointer; color: #666;
+  }
+  .wiki-modal-thumb {
+    width: 100%; max-height: 180px; object-fit: cover;
+    border-radius: 10px; margin-bottom: 0.75rem;
+  }
+  .wiki-modal-title { color: #00843D; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; padding-right: 1.5rem; }
+  .wiki-modal-extract { color: #444; font-size: 0.92rem; line-height: 1.5; margin-bottom: 1.1rem; }
+  .wiki-modal-link {
+    display: inline-block; background: #00843D; color: white;
+    text-decoration: none; padding: 0.6rem 1.2rem; border-radius: 99px;
+    font-size: 0.9rem; font-weight: 600;
+  }
+  .wiki-modal-loading { text-align: center; padding: 2.5rem 0; color: #999; font-size: 0.9rem; }
+  .wiki-modal-hint { font-size: 0.75rem; color: #999; margin-top: 0.6rem; }
 </style>
 
 </body>

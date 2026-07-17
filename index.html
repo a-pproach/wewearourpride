@@ -117,7 +117,6 @@
       grid-template-columns: repeat(9, 24px) !important;
       gap: 3px !important;
       justify-content: start !important;
-      direction: rtl;
     }
     #medalRow svg {
       width: 24px !important;
@@ -125,7 +124,6 @@
     }
     #medalRow .match-instruction {
       grid-column: 1 / -1;
-      direction: ltr;
     }
 
     .progress-wrap {
@@ -178,6 +176,9 @@
       text-transform: uppercase;
     }
 
+    .board-header.event-tap { cursor: pointer; }
+    .board-header.event-tap::after { content: ' ⓘ'; opacity: 0.7; font-size: 0.85em; }
+
     .board-header.national { background: #00843D; color: white; }
     .board-header.summer { background: #FFD700; color: #2c2c2c; }
     .board-header.winter { background: #FFD700; color: #2c2c2c; }
@@ -206,6 +207,10 @@
     .sport-item.selected { background: #00843D; color: white; font-weight: 500; }
     .sport-item.found { background: #fffbe6; color: #7a5000; }
     .sport-item.found::after { content: ' ★'; }
+
+    .team-name-green { color: #00843D; font-weight: 600; }
+    .sport-item.selected .team-name-green { color: white; }
+    .sport-item.found .team-name-green { color: #7a5000; }
 
     .paralympic-divider {
       margin: 0.6rem 0.3rem 0.3rem;
@@ -492,26 +497,26 @@
       <div class="sport-board" style="margin-bottom:1rem">
         <div class="board-header national">🦘 National Teams</div>
         <div class="board-items" id="boardNational">
-          <button class="sport-item" data-team="aussie-spirit" onclick="selectSport(this,'aussie-spirit')">Aussie Spirit — Women's Softball</button>
-          <button class="sport-item" data-team="boomers" onclick="selectSport(this,'boomers')">Boomers — Basketball</button>
-          <button class="sport-item" data-team="burras" onclick="selectSport(this,'burras')">Burras — Under-21 Hockey</button>
-          <button class="sport-item" data-team="diamonds" onclick="selectSport(this,'diamonds')">Diamonds — Netball</button>
-          <button class="sport-item" data-team="dolphins" onclick="selectSport(this,'dolphins')">Dolphins — Swimming</button>
-          <button class="sport-item" data-team="emeralds" onclick="selectSport(this,'emeralds')">Emeralds — Women's Baseball</button>
-          <button class="sport-item" data-team="hockeyroos" onclick="selectSport(this,'hockeyroos')">Hockeyroos — Women's Hockey</button>
-          <button class="sport-item" data-team="jillaroos" onclick="selectSport(this,'jillaroos')">Jillaroos — Women's Rugby League</button>
-          <button class="sport-item" data-team="kangaroos" onclick="selectSport(this,'kangaroos')">Kangaroos — Rugby League</button>
-          <button class="sport-item" data-team="kookaburras" onclick="selectSport(this,'kookaburras')">Kookaburras — Men's Hockey</button>
-          <button class="sport-item" data-team="matildas" onclick="selectSport(this,'matildas')">Matildas — Women's Football</button>
-          <button class="sport-item" data-team="olyroos" onclick="selectSport(this,'olyroos')">Olyroos — Olympic Football</button>
-          <button class="sport-item" data-team="opals" onclick="selectSport(this,'opals')">Opals — Women's Basketball</button>
-          <button class="sport-item" data-team="sharks" onclick="selectSport(this,'sharks')">Sharks — Men's Water Polo</button>
-          <button class="sport-item" data-team="socceroos" onclick="selectSport(this,'socceroos')">Socceroos — Men's Football</button>
-          <button class="sport-item" data-team="stingers" onclick="selectSport(this,'stingers')">Stingers — Women's Water Polo</button>
-          <button class="sport-item" data-team="volleyroos" onclick="selectSport(this,'volleyroos')">Volleyroos — Volleyball</button>
-          <button class="sport-item" data-team="wallabies" onclick="selectSport(this,'wallabies')">Wallabies — Rugby Union</button>
-          <button class="sport-item" data-team="wallaroos" onclick="selectSport(this,'wallaroos')">Wallaroos — Women's Rugby Union</button>
-          <button class="sport-item" data-team="young-socceroos" onclick="selectSport(this,'young-socceroos')">Young Socceroos — Youth Football</button>
+          <button class="sport-item" data-team="aussie-spirit" onclick="selectSport(this,'aussie-spirit')"><span class="team-name-green">Aussie Spirit</span> — Women's Softball</button>
+          <button class="sport-item" data-team="boomers" onclick="selectSport(this,'boomers')"><span class="team-name-green">Boomers</span> — Basketball</button>
+          <button class="sport-item" data-team="burras" onclick="selectSport(this,'burras')"><span class="team-name-green">Burras</span> — Under-21 Hockey</button>
+          <button class="sport-item" data-team="diamonds" onclick="selectSport(this,'diamonds')"><span class="team-name-green">Diamonds</span> — Netball</button>
+          <button class="sport-item" data-team="dolphins" onclick="selectSport(this,'dolphins')"><span class="team-name-green">Dolphins</span> — Swimming</button>
+          <button class="sport-item" data-team="emeralds" onclick="selectSport(this,'emeralds')"><span class="team-name-green">Emeralds</span> — Women's Baseball</button>
+          <button class="sport-item" data-team="hockeyroos" onclick="selectSport(this,'hockeyroos')"><span class="team-name-green">Hockeyroos</span> — Women's Hockey</button>
+          <button class="sport-item" data-team="jillaroos" onclick="selectSport(this,'jillaroos')"><span class="team-name-green">Jillaroos</span> — Women's Rugby League</button>
+          <button class="sport-item" data-team="kangaroos" onclick="selectSport(this,'kangaroos')"><span class="team-name-green">Kangaroos</span> — Rugby League</button>
+          <button class="sport-item" data-team="kookaburras" onclick="selectSport(this,'kookaburras')"><span class="team-name-green">Kookaburras</span> — Men's Hockey</button>
+          <button class="sport-item" data-team="matildas" onclick="selectSport(this,'matildas')"><span class="team-name-green">Matildas</span> — Women's Football</button>
+          <button class="sport-item" data-team="olyroos" onclick="selectSport(this,'olyroos')"><span class="team-name-green">Olyroos</span> — Olympic Football</button>
+          <button class="sport-item" data-team="opals" onclick="selectSport(this,'opals')"><span class="team-name-green">Opals</span> — Women's Basketball</button>
+          <button class="sport-item" data-team="sharks" onclick="selectSport(this,'sharks')"><span class="team-name-green">Sharks</span> — Men's Water Polo</button>
+          <button class="sport-item" data-team="socceroos" onclick="selectSport(this,'socceroos')"><span class="team-name-green">Socceroos</span> — Men's Football</button>
+          <button class="sport-item" data-team="stingers" onclick="selectSport(this,'stingers')"><span class="team-name-green">Stingers</span> — Women's Water Polo</button>
+          <button class="sport-item" data-team="volleyroos" onclick="selectSport(this,'volleyroos')"><span class="team-name-green">Volleyroos</span> — Volleyball</button>
+          <button class="sport-item" data-team="wallabies" onclick="selectSport(this,'wallabies')"><span class="team-name-green">Wallabies</span> — Rugby Union</button>
+          <button class="sport-item" data-team="wallaroos" onclick="selectSport(this,'wallaroos')"><span class="team-name-green">Wallaroos</span> — Women's Rugby Union</button>
+          <button class="sport-item" data-team="young-socceroos" onclick="selectSport(this,'young-socceroos')"><span class="team-name-green">Young Socceroos</span> — Youth Football</button>
           <div class="paralympic-divider">
             <div class="paralympic-divider-title">🥈 Paralympic Teams</div>
             <div class="paralympic-divider-subtitle">Match the actions used by these teams</div>
@@ -523,7 +528,7 @@
       </div>
 
       <div class="sport-board">
-        <div class="board-header winter">❄️ Milano Cortina 2026 Winter Olympics</div>
+        <div class="board-header winter event-tap" onclick="openEventWikiModal('winter')">❄️ Milano Cortina 2026 Winter Olympics</div>
         <div class="board-items">
           <button class="sport-item" data-team="wi-alpine" onclick="selectSport(this,'wi-alpine')">Alpine Skiing</button>
           <button class="sport-item" data-team="wi-crosscountry" onclick="selectSport(this,'wi-crosscountry')">Cross-Country Skiing</button>
@@ -625,7 +630,7 @@
     <!-- RIGHT: SUMMER + COMMONWEALTH -->
     <div>
       <div class="sport-board" style="margin-bottom:1rem">
-        <div class="board-header summer">☀️ LA 2028 Summer Olympics</div>
+        <div class="board-header summer event-tap" onclick="openEventWikiModal('summer')">☀️ LA 2028 Summer Olympics</div>
         <div class="board-items">
           <button class="sport-item" data-team="sw-swimming" onclick="selectSport(this,'sw-swimming')">Swimming</button>
           <button class="sport-item" data-team="sw-diving" onclick="selectSport(this,'sw-diving')">Diving</button>
@@ -663,7 +668,7 @@
       </div>
 
       <div class="sport-board">
-        <div class="board-header commonwealth">🌏 Glasgow 2026 Commonwealth Games</div>
+        <div class="board-header commonwealth event-tap" onclick="openEventWikiModal('commonwealth')">🌏 Glasgow 2026 Commonwealth Games</div>
         <div class="board-items">
           <button class="sport-item" data-team="cw-athletics" onclick="selectSport(this,'cw-athletics')">Athletics</button>
           <button class="sport-item" data-team="cw-swimming" onclick="selectSport(this,'cw-swimming')">Swimming</button>
@@ -679,7 +684,7 @@
       </div>
 
       <div class="sport-board" style="margin-top:1rem">
-        <div class="board-header" style="background:#888;color:white;">❓ Not at Glasgow 2026</div>
+        <div class="board-header event-tap" style="background:#888;color:white;" onclick="showNotGlasgowModal()">❓ Not at Glasgow 2026</div>
         <div style="font-size:0.72rem;color:#888;padding:0.4rem 0.8rem;font-style:italic">Previously at Commonwealth Games — not this time. 🥉 Bronze if you find the lyric match!</div>
         <div class="board-items">
           <button class="sport-item" data-team="ng-badminton" onclick="selectSport(this,'ng-badminton')">Badminton</button>
@@ -716,19 +721,19 @@
         <div class="board-items" id="mobileTeams"></div>
       </div>
       <div class="mobile-board">
-        <div class="board-header commonwealth">🌏 Glasgow 2026</div>
+        <div class="board-header commonwealth event-tap" onclick="openEventWikiModal('commonwealth')">🌏 Glasgow 2026</div>
         <div class="board-items" id="mobileCW"></div>
       </div>
       <div class="mobile-board">
-        <div class="board-header summer">☀️ LA 2028 Summer</div>
+        <div class="board-header summer event-tap" onclick="openEventWikiModal('summer')">☀️ LA 2028 Summer</div>
         <div class="board-items" id="mobileSW"></div>
       </div>
       <div class="mobile-board">
-        <div class="board-header winter">❄️ Milano Cortina</div>
+        <div class="board-header winter event-tap" onclick="openEventWikiModal('winter')">❄️ Milano Cortina</div>
         <div class="board-items" id="mobileWI"></div>
       </div>
       <div class="mobile-board">
-        <div class="board-header" style="background:#888;color:white;">❓ Not at Glasgow</div>
+        <div class="board-header event-tap" style="background:#888;color:white;" onclick="showNotGlasgowModal()">❓ Not at Glasgow</div>
         <div style="font-size:0.7rem;color:#888;padding:0.3rem 0.6rem;font-style:italic">🥉 Bronze if you find the match!</div>
         <div class="board-items" id="mobileNG"></div>
       </div>
@@ -1126,6 +1131,9 @@
   // Short tap/click still only selects (selectSport, untouched).
   // Long-press or double-click opens an in-page Wikipedia preview instead.
   var wikiPages = {
+    'event-commonwealth': "2026_Commonwealth_Games",
+    'event-summer':       "2028_Summer_Olympics",
+    'event-winter':       "2026_Winter_Olympics",
     'aussie-spirit':    "Australia_women%27s_national_softball_team",
     'boomers':          "Australia_men%27s_national_basketball_team",
     'burras':           "Australia_men%27s_national_under-21_field_hockey_team",
@@ -1282,6 +1290,32 @@
       lastClickBtn = btn; lastClickTime = now;
     }, true);
   })();
+
+  function openEventWikiModal(key) {
+    openWikiModal('event-' + key);
+  }
+
+  function showNotGlasgowModal() {
+    var modal = document.getElementById('wikiModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'wikiModal';
+      modal.className = 'wiki-modal-overlay';
+      modal.innerHTML = '<div class="wiki-modal-card">' +
+        '<button class="wiki-modal-close" aria-label="Close">✕</button>' +
+        '<div class="wiki-modal-body"></div>' +
+        '</div>';
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function(e) { if (e.target === modal) closeWikiModal(); });
+      modal.querySelector('.wiki-modal-close').addEventListener('click', closeWikiModal);
+    }
+    modal.classList.add('show');
+    var body = modal.querySelector('.wiki-modal-body');
+    body.innerHTML =
+      '<h3 class="wiki-modal-title">❓ Not at Glasgow 2026</h3>' +
+      '<p class="wiki-modal-extract">Glasgow 2026 is a scaled-down Commonwealth Games — only around 10 sports are being staged, far fewer than a full Games usually includes. The sports on this board are real Commonwealth Games or Olympic sports. They just didn\'t make the cut for this particular edition.</p>' +
+      '<p class="wiki-modal-extract">🥉 Find their match in the lyrics and you\'ll still win a Bronze medal!</p>';
+  }
 
   function openWikiModal(sport) {
     var title = wikiPages[sport];

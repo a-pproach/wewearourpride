@@ -61,6 +61,16 @@
       -webkit-text-stroke: 1px #b8960a;
     }
 
+    .chant-line {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-top: 0.1rem;
+    }
+    .chant-line .chant-green { color: #00843D; }
+    .chant-line .chant-gold { color: #FFD700; -webkit-text-stroke: 1px #b8960a; }
+
     .subtitle {
       font-size: 1rem;
       color: #666;
@@ -176,8 +186,7 @@
       text-transform: uppercase;
     }
 
-    .board-header.event-tap { cursor: pointer; }
-    .board-header.event-tap::after { content: ' ⓘ'; opacity: 0.7; font-size: 0.85em; }
+    .board-header.event-tap { cursor: pointer; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; }
 
     .board-header.national { background: #00843D; color: white; }
     .board-header.summer { background: #FFD700; color: #2c2c2c; }
@@ -324,6 +333,13 @@
       font-weight: 600;
     }
 
+    /* Team-clue words celebrate in Green & Gold once their full set is complete */
+    .lyric-phrase.team-clue.found {
+      background: #fff3b0;
+      border-bottom: 2px solid #FFD700;
+      color: #00843D;
+    }
+
     .lyric-phrase.wrong {
       background: #ffe6e6;
       border-bottom: 2px solid #cc0000;
@@ -422,6 +438,7 @@
       .mobile-layout { display: block !important; }
       header { padding: 0.6rem 0.75rem !important; margin-bottom: 0; }
       .title-treatment { font-size: 1.4rem; }
+      .chant-line { font-size: 0.95rem; }
       .subtitle { font-size: 0.75rem; margin-top: 0.15rem; }
       .tally-bar { position: sticky; top: 0; z-index: 999; background: white; border-radius: 0; border-left: none; border-right: none; border-bottom: 1px solid #eee; padding: 0.4rem 0.75rem 0.4rem 1rem; margin-bottom: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.08); flex-direction: row; align-items: center; gap: 0.6rem; }
       .tally-bar .tally-counts-col { flex-direction: column; align-items: flex-start; gap: 1px; flex-wrap: nowrap; }
@@ -469,13 +486,30 @@
 </head>
 <body>
 
+<div class="landing-modal-overlay show" id="landingModal">
+  <div class="landing-modal-card">
+    <h2 class="landing-modal-title">🎵 Welcome to We Wear Our Pride!</h2>
+    <p class="landing-modal-text">This song hides real Australian sporting teams inside clever, poetic lyrics. One single word — like "marsupials" — can secretly stand for ten different national teams!<br>For example, including all the ones with "-roos" in their name!<br>Nothing is named directly. It's all hidden in plain sight, waiting to be decoded.</p>
+    <h3 class="landing-modal-subtitle">How to play:</h3>
+    <ul class="landing-modal-list">
+      <li>👉 Pick a team or sport from the lists</li>
+      <li>📖 Press &amp; hold (or double-click) any name to learn more about it</li>
+      <li>🔍 Find where it's hiding in the lyrics and click there to match</li>
+      <li>🟢 Green words are clues — complete a set to celebrate the Green &amp; Gold!</li>
+      <li>🥇 Win medals as you go — see how many you can collect!</li>
+    </ul>
+    <button class="landing-modal-btn" onclick="closeLandingModal()">Let's Play! 🚀</button>
+  </div>
+</div>
+
 <div class="map-bg"></div>
 
 <div class="page-wrap">
 
   <header>
     <div class="title-treatment">We Wear Our <span>Pride</span></div>
-    <div class="subtitle">Australia's Sporting Anthem Challenge — How many can your class find?</div>
+    <div class="chant-line"><span class="chant-green">The Green</span> <span class="chant-gold">&amp; Gold</span></div>
+    <div class="subtitle">Australia's Sporting Anthem Challenge<br>— How many can you or your class find?</div>
   </header>
 
   <!-- MEDAL TALLY -->
@@ -918,6 +952,56 @@
   // swimming mates, gems) only get their full "found" highlight once every
   // team assigned to that word has been matched — not on the first hit.
   const GROUP_COMPLETE_WORDS = ['marsupials', 'laughing', 'swimming mates', 'gems'];
+  const CELEBRATION_WORDS = ['marsupials', 'laughing', 'swimming mates', 'gems', 'matildas', 'aussie spirit'];
+  const SET_COMPLETE_INFO = {
+    'marsupials': {
+      title: "We honour our Marsupials 🦘",
+      text: "You found all ten! Nearly every \"-roo\" team in Australian sport is hiding in this one word — Kangaroos, Wallabies, Wallaroos, Boomers, Socceroos, Young Socceroos, Olyroos, Hockeyroos, Volleyroos, and Jillaroos. Ten teams, one word — that's the power of \"marsupials.\""
+    },
+    'laughing': {
+      title: "their Laughing mates 🤣",
+      text: "You've successfully identified which national teams this line references! The Kookaburras and Burras are named for Australia's famous laughing bird — and of course, they're definitely \"mates\" with the marsupials, since kookaburras are as iconically Australian as any roo."
+    },
+    'swimming mates': {
+      title: "their Swimming mates 🏊",
+      text: "You found all three! Dolphins, Sharks, and Stingers — every one of them named after a creature that calls the water home, just like the athletes who wear the name."
+    },
+    'gems': {
+      title: "the Gems within our southern land 💎",
+      text: "You found all three! Diamonds, Opals, and Emeralds — three national teams named after precious stones, each one a genuine gem of Australian sport."
+    },
+    'matildas': {
+      title: "our Matildas ⚽",
+      text: "The Matildas are Australia's women's national football team — and the name is a clever double reference, echoing \"Waltzing Matilda,\" Australia's best-loved unofficial anthem. One word, two proud Australian traditions."
+    },
+    'aussie spirit': {
+      title: "the Aussie Spirit 🥎",
+      text: "Aussie Spirit is the real name of Australia's women's national softball team — and it doubles as the perfect description of what this whole song is about. Well found!"
+    }
+  };
+
+  function showSetCompleteModal(word) {
+    const info = SET_COMPLETE_INFO[word];
+    if (!info) return;
+    let modal = document.getElementById('setCompleteModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'setCompleteModal';
+      modal.className = 'wiki-modal-overlay';
+      modal.innerHTML = '<div class="wiki-modal-card">' +
+        '<button class="wiki-modal-close" aria-label="Close">✕</button>' +
+        '<div class="wiki-modal-body"></div>' +
+        '</div>';
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('show'); });
+      modal.querySelector('.wiki-modal-close').addEventListener('click', function() { modal.classList.remove('show'); });
+    }
+    modal.classList.add('show');
+    var body = modal.querySelector('.wiki-modal-body');
+    body.innerHTML = '<h3 class="wiki-modal-title">' + info.title + '</h3>' +
+      '<p class="wiki-modal-extract">' + info.text + '</p>';
+  }
+
   function isGroupWordComplete(word) {
     const teamsForWord = Object.keys(matchMap).filter(id => matchMap[id].includes(word));
     return teamsForWord.length > 0 && teamsForWord.every(id => foundMatches.has(id + '::' + word));
@@ -940,6 +1024,9 @@
         foundMatches.add(key);
         if (!GROUP_COMPLETE_WORDS.includes(phraseZone) || isGroupWordComplete(phraseZone)) {
           phraseEl.classList.add('found');
+          if (CELEBRATION_WORDS.includes(phraseZone)) {
+            showSetCompleteModal(phraseZone);
+          }
         }
         if (selectedBtn) { selectedBtn.classList.remove('selected'); selectedBtn.classList.add('found'); }
 
@@ -1354,6 +1441,11 @@
       });
   }
 
+  function closeLandingModal() {
+    var modal = document.getElementById('landingModal');
+    if (modal) modal.classList.remove('show');
+  }
+
   function closeWikiModal() {
     var modal = document.getElementById('wikiModal');
     if (modal) modal.classList.remove('show');
@@ -1370,6 +1462,39 @@
 
 <style>
   /* === WIKIPEDIA PREVIEW MODAL === */
+  .landing-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10000;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+    padding: 1rem;
+  }
+  .landing-modal-overlay.show { opacity: 1; pointer-events: auto; }
+  .landing-modal-card {
+    background: white;
+    border: 3px solid #FFD700;
+    border-radius: 16px;
+    max-width: 440px; width: 100%;
+    max-height: 88vh; overflow-y: auto;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .landing-modal-title { color: #00843D; font-size: 1.3rem; font-weight: 800; margin-bottom: 0.6rem; text-align: center; }
+  .landing-modal-text { color: #333; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
+  .landing-modal-subtitle { color: #00843D; font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .landing-modal-list { list-style: none; padding: 0; margin: 0 0 1.3rem; }
+  .landing-modal-list li { font-size: 0.9rem; color: #333; line-height: 1.7; }
+  .landing-modal-btn {
+    display: block; width: 100%;
+    background: #00843D; color: white;
+    border: none; padding: 1rem; border-radius: 12px;
+    font-size: 1.15rem; font-weight: 800;
+    cursor: pointer;
+  }
+  .landing-modal-btn:hover { background: #006830; }
+
   .wiki-modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.55);

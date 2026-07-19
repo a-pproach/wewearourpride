@@ -486,6 +486,17 @@
 </head>
 <body>
 
+<div class="splash-screen" id="splashScreen" onclick="closeSplash()">
+  <div class="splash-content">
+    <div class="splash-title">We Wear Our <span>Pride</span></div>
+    <div class="splash-tagline">The Lyric Treasure Hunt</div>
+    <div class="splash-url">wewearourpride.au</div>
+    <div class="splash-credit">A Christopher DC project</div>
+    <a href="https://christopherdc.com.au" class="splash-cdc-link" onclick="event.stopPropagation()">christopherdc.com.au</a>
+  </div>
+  <div class="splash-tap-hint">👆 Tap to continue</div>
+</div>
+
 <div class="landing-modal-overlay show" id="landingModal">
   <div class="landing-modal-card">
     <h2 class="landing-modal-title">🎵 Welcome to We Wear Our Pride!</h2>
@@ -498,6 +509,7 @@
       <li>🟢 Green words are clues — complete a set to celebrate the Green &amp; Gold!</li>
       <li>🥇 Win medals as you go — see how many you can collect!</li>
     </ul>
+    <div class="landing-modal-url">wewearourpride.au</div>
     <button class="landing-modal-btn" onclick="closeLandingModal()">Let's Play! 🚀</button>
   </div>
 </div>
@@ -1441,6 +1453,13 @@
       });
   }
 
+  function closeSplash() {
+    var splash = document.getElementById('splashScreen');
+    if (!splash || splash.classList.contains('dismissing')) return;
+    splash.classList.add('dismissing');
+    setTimeout(function() { splash.remove(); }, 500);
+  }
+
   function closeLandingModal() {
     var modal = document.getElementById('landingModal');
     if (modal) modal.classList.remove('show');
@@ -1462,6 +1481,70 @@
 
 <style>
   /* === WIKIPEDIA PREVIEW MODAL === */
+  .splash-screen {
+    position: fixed; inset: 0;
+    background: #fdf6d8;
+    z-index: 20000;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.5s ease;
+  }
+  .splash-screen.dismissing { opacity: 0; pointer-events: none; }
+  .splash-content {
+    text-align: center;
+    opacity: 0;
+    animation: splashContentIn 0.8s ease forwards;
+    animation-delay: 1s;
+    max-width: 90vw;
+  }
+  .splash-title { font-size: 2.4rem; font-weight: 800; color: #00843D; letter-spacing: -0.01em; }
+  .splash-title span { color: #FFD700; -webkit-text-stroke: 1px #b8960a; }
+  .splash-tagline { font-size: 2.4rem; color: #FFD700; -webkit-text-stroke: 1.5px #b8960a; text-shadow: 1px 1px 0 rgba(0,0,0,0.15); font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; margin-top: 0.6rem; padding: 0 0.5rem; }
+  .splash-url { font-size: 1rem; color: #00843D; font-weight: 700; margin-top: 1.4rem; letter-spacing: 0.02em; }
+  .splash-credit { font-size: 0.8rem; color: #999; margin-top: 0.4rem; }
+  .splash-cdc-link {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.85rem; color: #b8960a; text-decoration: underline;
+    text-decoration-style: dotted; letter-spacing: 0.02em;
+  }
+  .splash-tap-hint {
+    position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%);
+    text-align: center; font-size: 1.1rem; font-weight: 800; color: #7a5000;
+    background: #FFD700;
+    border: 2px solid #b8960a;
+    border-radius: 50px;
+    padding: 0.7rem 1.6rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0;
+    animation: splashHintIn 0.6s ease forwards, splashHintPulse 1.6s ease-in-out 2.6s infinite;
+    animation-delay: 2s;
+  }
+  @keyframes splashHintPulse {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.06); }
+  }
+  @keyframes splashContentIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes splashHintIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  @media (max-width: 480px) {
+    .splash-title { font-size: 1.7rem; }
+    .splash-tagline { font-size: 1.7rem; }
+  }
+
+  .landing-modal-url {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #999;
+    margin: 0.3rem 0 1rem;
+    letter-spacing: 0.02em;
+  }
+
   .landing-modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.6);

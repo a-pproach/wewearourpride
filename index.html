@@ -1482,6 +1482,10 @@
       });
   }
 
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(function() {});
+  }
+
   var deferredInstallPrompt = null;
   window.addEventListener('beforeinstallprompt', function(e) {
     e.preventDefault();

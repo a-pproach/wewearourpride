@@ -447,6 +447,7 @@
       .main-layout { display: none !important; }
       .mobile-layout { display: block !important; }
       .hint-mobile { display: list-item !important; }
+      .splash-install { display: block !important; }
       .hint-desktop { display: none !important; }
       header { padding: 0.6rem 0.75rem !important; margin-bottom: 0; }
       .title-treatment { font-size: 1.4rem; }
@@ -505,6 +506,20 @@
     <div class="splash-url">wewearourpride.au</div>
     <div class="splash-credit">A Christopher DC project</div>
     <a href="https://christopherdc.com.au" class="splash-cdc-link" onclick="event.stopPropagation()">christopherdc.com.au</a>
+
+    <div class="splash-install" onclick="event.stopPropagation()">
+      <div class="splash-install-label">📲 Save to Homescreen</div>
+      <div class="splash-install-row">
+        <div class="splash-install-btn" onclick="handleAndroidInstall()">
+          <img src="icon-192.png" alt="" class="splash-install-icon">
+          <span>Android</span>
+        </div>
+        <div class="splash-install-btn" onclick="showAppleInstallModal()">
+          <img src="icon-192.png" alt="" class="splash-install-icon">
+          <span>Apple</span>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="splash-tap-hint">👆 Tap to continue</div>
 </div>
@@ -1467,6 +1482,58 @@
       });
   }
 
+  var deferredInstallPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+  });
+
+  function handleAndroidInstall() {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then(function() { deferredInstallPrompt = null; });
+    } else {
+      showInstallModal(
+        '🤖 Add to Home Screen',
+        '<ol style="text-align:left; padding-left:1.2rem; line-height:1.8;">' +
+        '<li>Tap the menu (⋮) in the top-right of Chrome</li>' +
+        '<li>Tap "Add to Home screen" or "Install app"</li>' +
+        '<li>Confirm to add</li>' +
+        '</ol>'
+      );
+    }
+  }
+
+  function showAppleInstallModal() {
+    showInstallModal(
+      '🍎 Add to Home Screen',
+      '<ol style="text-align:left; padding-left:1.2rem; line-height:1.8;">' +
+      '<li>Tap the Share icon (square with an arrow) in Safari</li>' +
+      '<li>Scroll down and tap "Add to Home Screen"</li>' +
+      '<li>Tap "Add" in the top-right</li>' +
+      '</ol>'
+    );
+  }
+
+  function showInstallModal(title, bodyHtml) {
+    var modal = document.getElementById('installModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'installModal';
+      modal.className = 'wiki-modal-overlay';
+      modal.innerHTML = '<div class="wiki-modal-card">' +
+        '<button class="wiki-modal-close" aria-label="Close">✕</button>' +
+        '<div class="wiki-modal-body"></div>' +
+        '</div>';
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('show'); });
+      modal.querySelector('.wiki-modal-close').addEventListener('click', function() { modal.classList.remove('show'); });
+    }
+    modal.classList.add('show');
+    var body = modal.querySelector('.wiki-modal-body');
+    body.innerHTML = '<h3 class="wiki-modal-title">' + title + '</h3><div class="wiki-modal-extract">' + bodyHtml + '</div>';
+  }
+
   function closeSplash() {
     var splash = document.getElementById('splashScreen');
     if (!splash || splash.classList.contains('dismissing')) return;
@@ -1522,6 +1589,39 @@
     font-size: 0.85rem; color: #b8960a; text-decoration: underline;
     text-decoration-style: dotted; letter-spacing: 0.02em;
   }
+  .splash-install {
+    margin-top: 1.4rem;
+    display: none;
+  }
+  .splash-install-label {
+    font-size: 0.85rem;
+    color: #7a5000;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .splash-install-row {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+  }
+  .splash-install-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+  }
+  .splash-install-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .splash-install-btn span {
+    font-size: 0.75rem;
+    color: #555;
+    font-weight: 600;
+  }
+
   .splash-tap-hint {
     position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%);
     text-align: center; font-size: 1.1rem; font-weight: 800; color: #7a5000;

@@ -1,0 +1,12 @@
+{
+  "name": "We Wear Our Pride - The Lyric Treasure Hunt",
+  "short_name": "We Wear Our Pride",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fdf6d8",
+  "theme_color": "#00843D",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

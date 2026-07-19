@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>We Wear Our Pride — Australia's Sporting Anthem Challenge</title>
   <meta name="description" content="An interactive classroom activity. Find every Australian sporting team and sport hidden in the lyrics of We Wear Our Pride.">
+
+  <!-- Home screen icons (iOS + Android/PWA) -->
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="We Wear Our Pride">
+  <meta name="theme-color" content="#00843D">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -513,7 +523,6 @@
       <li>🟢 Green words are clues — complete a set to celebrate the Green &amp; Gold!</li>
       <li>🥇 Win medals as you go — see how many you can collect!</li>
     </ul>
-    <div class="landing-modal-url">wewearourpride.au</div>
     <button class="landing-modal-btn" onclick="closeLandingModal()">Let's Play! 🚀</button>
   </div>
 </div>
@@ -1540,14 +1549,6 @@
   @media (max-width: 480px) {
     .splash-title { font-size: 1.7rem; }
     .splash-tagline { font-size: 1.7rem; }
-  }
-
-  .landing-modal-url {
-    text-align: center;
-    font-size: 0.85rem;
-    color: #999;
-    margin: 0.3rem 0 1rem;
-    letter-spacing: 0.02em;
   }
 
   .landing-modal-overlay {

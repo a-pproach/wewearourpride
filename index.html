@@ -436,6 +436,8 @@
     @media (max-width: 768px) {
       .main-layout { display: none !important; }
       .mobile-layout { display: block !important; }
+      .hint-mobile { display: list-item !important; }
+      .hint-desktop { display: none !important; }
       header { padding: 0.6rem 0.75rem !important; margin-bottom: 0; }
       .title-treatment { font-size: 1.4rem; }
       .chant-line { font-size: 0.95rem; }
@@ -500,11 +502,13 @@
 <div class="landing-modal-overlay show" id="landingModal">
   <div class="landing-modal-card">
     <h2 class="landing-modal-title">🎵 Welcome to We Wear Our Pride!</h2>
-    <p class="landing-modal-text">This song hides real Australian sporting teams inside clever, poetic lyrics. One single word — like "marsupials" — can secretly stand for ten different national teams!<br>For example, including all the ones with "-roos" in their name!<br>Nothing is named directly. It's all hidden in plain sight, waiting to be decoded.</p>
+    <p class="landing-modal-text">This song hides real Australian sporting teams inside clever, poetic lyrics. One single word — like "marsupials" — can secretly stand for ten different national teams!<br>For example, including all the ones with "-roos" in their name!<br>No team or sport is named directly*. It's all hidden in plain sight, waiting to be decoded.</p>
+    <p class="landing-modal-text" style="font-size: 0.8rem; color: #999; margin-top: -0.6rem;">* with two notable exceptions — how quickly can you find them? 🙂</p>
     <h3 class="landing-modal-subtitle">How to play:</h3>
     <ul class="landing-modal-list">
       <li>👉 Pick a team or sport from the lists</li>
-      <li>📖 Press &amp; hold (or double-click) any name to learn more about it</li>
+      <li class="hint-mobile">📖 Press &amp; hold any name to learn more about it</li>
+      <li class="hint-desktop">📖 Double-click any name to learn more about it</li>
       <li>🔍 Find where it's hiding in the lyrics and click there to match</li>
       <li>🟢 Green words are clues — complete a set to celebrate the Green &amp; Gold!</li>
       <li>🥇 Win medals as you go — see how many you can collect!</li>
@@ -933,11 +937,12 @@
     var existing = document.querySelector('.press-hold-invite');
     if (existing) existing.remove();
     var kind = isTeamId(sport) ? 'team' : 'sport';
+    var actionPhrase = window.matchMedia('(max-width: 768px)').matches ? 'Press &amp; hold' : 'Double-click';
     var invite = document.createElement('div');
     invite.className = 'press-hold-invite';
     invite.innerHTML = '<div class="press-hold-invite-card">' +
       '<div class="press-hold-invite-icon">👉</div>' +
-      '<div class="press-hold-invite-text">Press &amp; hold (or double-click) to learn about this ' + kind + '!</div>' +
+      '<div class="press-hold-invite-text">' + actionPhrase + ' to learn about this ' + kind + '!</div>' +
       '<div class="press-hold-invite-tap">tap anywhere to continue</div>' +
       '</div>';
     invite.addEventListener('click', function() { invite.remove(); });
@@ -1569,6 +1574,8 @@
   .landing-modal-subtitle { color: #00843D; font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
   .landing-modal-list { list-style: none; padding: 0; margin: 0 0 1.3rem; }
   .landing-modal-list li { font-size: 0.9rem; color: #333; line-height: 1.7; }
+  .hint-mobile { display: none; }
+  .hint-desktop { display: list-item; }
   .landing-modal-btn {
     display: block; width: 100%;
     background: #00843D; color: white;

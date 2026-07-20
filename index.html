@@ -199,6 +199,8 @@
     }
 
     .board-header.event-tap { cursor: pointer; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; }
+    .board-header.audio-tap { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .board-header.audio-tap .play-hint { font-size: 0.7rem; opacity: 0.9; white-space: nowrap; font-weight: 600; letter-spacing: 0.02em; text-transform: none; color: #FFD700; }
 
     .board-header.national { background: #00843D; color: white; }
     .board-header.summer { background: #FFD700; color: #2c2c2c; }
@@ -571,7 +573,7 @@
     <!-- LEFT: NATIONAL TEAMS + WINTER OLYMPICS -->
     <div>
       <div class="sport-board" style="margin-bottom:1rem">
-        <div class="board-header national">🦘 National Teams</div>
+        <div class="board-header national audio-tap" onclick="playAnthemClip()"><span>🦘 National Teams</span><span class="play-hint">▶ Tap to Play</span></div>
         <div class="board-items" id="boardNational">
           <button class="sport-item" data-team="aussie-spirit" onclick="selectSport(this,'aussie-spirit')"><span class="team-name-green">Aussie Spirit</span> — Women's Softball</button>
           <button class="sport-item" data-team="boomers" onclick="selectSport(this,'boomers')"><span class="team-name-green">Boomers</span> — Basketball</button>
@@ -793,7 +795,7 @@
   <div class="mobile-layout">
     <div class="mobile-boards">
       <div class="mobile-board mobile-board-wide">
-        <div class="board-header national">🦘 National Teams</div>
+        <div class="board-header national audio-tap" onclick="playAnthemClip()"><span>🦘 National Teams</span><span class="play-hint">▶ Tap to Play</span></div>
         <div class="board-items" id="mobileTeams"></div>
       </div>
       <div class="mobile-board">
@@ -1538,6 +1540,15 @@
     modal.classList.add('show');
     var body = modal.querySelector('.wiki-modal-body');
     body.innerHTML = '<h3 class="wiki-modal-title">' + title + '</h3><div class="wiki-modal-extract">' + bodyHtml + '</div>';
+  }
+
+  var anthemAudio = null;
+  function playAnthemClip() {
+    if (!anthemAudio) {
+      anthemAudio = new Audio('wwop-verse-chorus.mp3');
+    }
+    anthemAudio.currentTime = 0;
+    anthemAudio.play().catch(function() {});
   }
 
   function closeSplash() {
